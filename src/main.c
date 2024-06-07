@@ -127,6 +127,7 @@ void print_help(const char* name_program){
 	print_options("-a \"[NOTE]\"", "Add a note");
 	print_options("-d [INDEX NOTE]", "Delete note");
 	print_options("-s", "Show all notes");
+	print_options("-D Yes", "Delete all notes.");
 	print_options("-h", "Display this message.");
 	putchar('\n');
 }
