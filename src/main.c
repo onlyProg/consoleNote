@@ -154,9 +154,6 @@ void add_elem(char*** array, ssize_t* count_line, const char* elem){
 }
 
 /*
- * FIXME: If you delete an element with index 0, then there is a
- * segmentation error
- *
  * Deleting an element (note) by its index.
  */
 void delete_elem(char*** array, ssize_t* count_line,
