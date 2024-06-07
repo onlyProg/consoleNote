@@ -117,12 +117,29 @@ void unload_data(const char* path_to_file, char*** array,
 	fclose(file);
 }
 
+void print_options(const char* options, const char* description){
+	printf("\t%-20s\t%s\n", options, description);
+}
+
+void print_help(const char* name_program){
+	printf("\nA program for saving notes in the Linux terminal.\n\n");
+	printf("Usage: %s [OPTIONS] [VALUE] ...\n\n", name_program);
+	print_options("-a \"[NOTE]\"", "Add a note");
+	print_options("-d [INDEX NOTE]", "Delete note");
+	print_options("-s", "Show all notes");
+	putchar('\n');
+}
 
 
-int main(void){
+int main(int argc, char** argv){
 	const char* path_to_file = NULL;
 	char** notes = NULL;
 	ssize_t count_line = 0;
+
+	if (argc < 2){
+		print_help(argv[0]);
+		return 0;
+	}
 
 	// Working with a notes file
 	path_to_file = get_path_to_file(FILE_NAME);
