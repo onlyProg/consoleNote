@@ -127,6 +127,7 @@ void print_help(const char* name_program){
 	print_options("-a \"[NOTE]\"", "Add a note");
 	print_options("-d [INDEX NOTE]", "Delete note");
 	print_options("-s", "Show all notes");
+	print_options("-h", "Display this message.");
 	putchar('\n');
 }
 
@@ -198,7 +199,7 @@ int main(int argc, char** argv){
 
 	notes = load_data(path_to_file, &count_line);
 
-	while ((result_arg = getopt(argc, argv, "a:d:s")) != -1){
+	while ((result_arg = getopt(argc, argv, "a:d:sh")) != -1){
 		switch (result_arg){
 			case 'a':
 				add_elem(&notes, &count_line, optarg);
@@ -208,6 +209,9 @@ int main(int argc, char** argv){
 				break;
 			case 's':
 				show_elems(notes, count_line);
+				break;
+			case 'h':
+				print_help(argv[0]);
 				break;
 		}
 	}
