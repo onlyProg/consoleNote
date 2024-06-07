@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
+#include <ctype.h>
 
 #define FILE_NAME ".note.txt"
 #define SIZE_LINE 1024
@@ -220,6 +221,11 @@ int main(int argc, char** argv){
 				add_elem(&notes, &count_line, optarg);
 				break;
 			case 'd':
+				for (ssize_t i = 0; i < strlen(optarg); i++){
+					if (isdigit(optarg[i]) == 0){
+						print_error("The value is not a number.", 5);
+					}
+				}
 				delete_elem(&notes, &count_line, atoi(optarg));
 				break;
 			case 's':
