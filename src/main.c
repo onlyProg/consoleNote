@@ -170,6 +170,20 @@ void delete_elem(char*** array, ssize_t* count_line,
 	(*count_line)--;
 }
 
+/*
+ * Remove all elements, but if the word Yes is specified.
+ */
+void delete_all_elem(char*** array, ssize_t* count_elem,
+		const char* confirmation){
+	if (strcmp(confirmation, "Yes"))
+		print_error("You must enter the word \"Yes\" to delete all elements.", 4);
+
+	for (ssize_t i = 0; i < (*count_elem) - 1; i++)
+		free(array[i]);
+
+	(*count_elem) = 0;
+}
+
 void show_elems(char** array, const ssize_t count_elem){
 	for (ssize_t i = 0; i < count_elem; i++)
 		print_elem(array[i], i);
@@ -199,7 +213,7 @@ int main(int argc, char** argv){
 
 	notes = load_data(path_to_file, &count_line);
 
-	while ((result_arg = getopt(argc, argv, "a:d:sh")) != -1){
+	while ((result_arg = getopt(argc, argv, "a:d:shD:")) != -1){
 		switch (result_arg){
 			case 'a':
 				add_elem(&notes, &count_line, optarg);
@@ -209,6 +223,9 @@ int main(int argc, char** argv){
 				break;
 			case 's':
 				show_elems(notes, count_line);
+				break;
+			case 'D':
+				delete_all_elem(&notes, &count_line, optarg);
 				break;
 			case 'h':
 				print_help(argv[0]);
