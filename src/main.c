@@ -130,11 +130,62 @@ void print_help(const char* name_program){
 	putchar('\n');
 }
 
+void print_error(const char* text_error, const ssize_t error_code){
+	fprintf(stderr, "[ERROR %i]: %s\n", error_code, text_error);
+	exit(error_code);
+}
+
+void print_elem(const char* text, const ssize_t index){
+	printf("[%i]: %s", index, text);
+}
+
+/*
+ * Adding an element (note) to the passed array with memory
+ * allocation.
+ */
+void add_elem(char*** array, ssize_t* count_line, const char* elem){
+	if (strlen(elem) >= SIZE_LINE)
+		print_error("The note is too long.", 2);
+
+	(*array) = realloc((*array), ++(*count_line) * sizeof(char*));
+	(*array)[(*count_line) - 1] = malloc(SIZE_LINE * sizeof(char));
+
+	sprintf((*array)[(*count_line) - 1], "%s\n", elem);
+}
+
+/*
+ * FIXME: If you delete an element with index 0, then there is a
+ * segmentation error
+ *
+ * Deleting an element (note) by its index.
+ */
+void delete_elem(char*** array, ssize_t* count_line,
+		const ssize_t index){
+	if (index >= (*count_line))
+		print_error("The index entered is too large.", 3);
+
+	for (ssize_t i = index; i < (*count_line) - 1; i++){
+		strcpy((*array)[i], (*array)[i + 1]);
+	}
+	free((*array)[*count_line - 1]);
+
+	(*count_line)--;
+}
+
+void show_elems(char** array, const ssize_t count_elem){
+	for (ssize_t i = 0; i < count_elem; i++)
+		print_elem(array[i], i);
+}
+
+
 
 int main(int argc, char** argv){
 	const char* path_to_file = NULL;
+
 	char** notes = NULL;
 	ssize_t count_line = 0;
+
+	int result_arg = 0;
 
 	if (argc < 2){
 		print_help(argv[0]);
@@ -144,11 +195,25 @@ int main(int argc, char** argv){
 	// Working with a notes file
 	path_to_file = get_path_to_file(FILE_NAME);
 	if (check_file(path_to_file)){
-		fprintf(stderr, "Failed to create notes file.");
+		print_error("Failed to create notes file.", 1);
 		exit(1);
 	}
 
 	notes = load_data(path_to_file, &count_line);
+
+	while ((result_arg = getopt(argc, argv, "a:d:s")) != -1){
+		switch (result_arg){
+			case 'a':
+				add_elem(&notes, &count_line, optarg);
+				break;
+			case 'd':
+				delete_elem(&notes, &count_line, atoi(optarg));
+				break;
+			case 's':
+				show_elems(notes, count_line);
+				break;
+		}
+	}
 
 	unload_data(path_to_file, &notes, count_line);
 	return 0;
