@@ -13,11 +13,8 @@
  * Getting the path to a file in the user's home directory.
  */
 char* get_path_to_file(const char* file_name){
-	char* path;
-
-	path = malloc((strlen(getenv("HOME")) + strlen(file_name)) * sizeof(char));
-	sprintf(path, "%s/%s", getenv("HOME"), file_name);
-
+	char* path = NULL;
+	asprintf(&path, "%s/%s", getenv("HOME"), file_name);
 	return path;
 }
 
