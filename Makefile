@@ -8,7 +8,7 @@ FLAGS_COMPIL =
 
 
 PREF_SRC = ./src/
-PREF_OBJ = ./obj/
+PREF_OBJ = ./
 
 
 SRC = $(wildcard $(PREF_SRC)*.$(SRC_FILE_EXTENSOIN))
