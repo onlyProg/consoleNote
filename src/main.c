@@ -9,6 +9,13 @@
 #define FILE_NAME ".note.txt"
 #define SIZE_LINE 1024
 
+// Errors code
+#define CREATE_FILE 1
+#define LONG_NOTE 2
+#define BIG_INDEX 3
+#define NO_CONFIRMATION 4
+#define VALUE_IS_NOT_A_NUMBER 5
+
 /*
  * Getting the path to a file in the user's home directory.
  */
@@ -145,7 +152,7 @@ void print_elem(const char* text, const ssize_t index){
  */
 void add_elem(char*** array, ssize_t* count_line, const char* elem){
 	if (strlen(elem) >= SIZE_LINE)
-		print_error("The note is too long.", 2);
+		print_error("The note is too long.", LONG_NOTE);
 
 	(*array) = realloc((*array), ++(*count_line) * sizeof(char*));
 	(*array)[(*count_line) - 1] = malloc(SIZE_LINE * sizeof(char));
@@ -159,7 +166,7 @@ void add_elem(char*** array, ssize_t* count_line, const char* elem){
 void delete_elem(char*** array, ssize_t* count_line,
 		const ssize_t index){
 	if (index >= (*count_line))
-		print_error("The index entered is too large.", 3);
+		print_error("The index entered is too large.", BIG_INDEX);
 
 	for (ssize_t i = index; i < (*count_line) - 1; i++){
 		strcpy((*array)[i], (*array)[i + 1]);
@@ -175,7 +182,7 @@ void delete_elem(char*** array, ssize_t* count_line,
 void delete_all_elem(char*** array, ssize_t* count_elem,
 		const char* confirmation){
 	if (strcmp(confirmation, "Yes"))
-		print_error("You must enter the word \"Yes\" to delete all elements.", 4);
+		print_error("You must enter the word \"Yes\" to delete all elements.", NO_CONFIRMATION);
 
 	for (ssize_t i = 0; i < (*count_elem) - 1; i++)
 		free(array[i]);
@@ -206,7 +213,7 @@ int main(int argc, char** argv){
 	// Working with a notes file
 	path_to_file = get_path_to_file(FILE_NAME);
 	if (check_file(path_to_file)){
-		print_error("Failed to create notes file.", 1);
+		print_error("Failed to create notes file.", CREATE_FILE);
 		exit(1);
 	}
 
@@ -220,7 +227,7 @@ int main(int argc, char** argv){
 			case 'd':
 				for (ssize_t i = 0; i < strlen(optarg); i++){
 					if (isdigit(optarg[i]) == 0){
-						print_error("The value is not a number.", 5);
+						print_error("The value is not a number.", VALUE_IS_NOT_A_NUMBER);
 					}
 				}
 				delete_elem(&notes, &count_line, atoi(optarg));
